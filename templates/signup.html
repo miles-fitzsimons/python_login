@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Flask Intro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <form method="post">
+      <input
+        type="text"
+        name="username_input"
+        placeholder="Username..."
+      /><br /><br />
+      <input
+        type="password"
+        name="password_input"
+        placeholder="Password..."
+      /><br /><br />
+      <input
+        type="password"
+        name="confirm_password_input"
+        placeholder="Confirm password..."
+      />
+      <input type="submit" value="Go" />
+    </form>
+
+    {% if error %}
+    <p class="error"><strong>Error:</strong> {{ error }}</p>
+    {% endif %}
+  </body>
+</html>
