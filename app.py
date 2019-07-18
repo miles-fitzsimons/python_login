@@ -64,11 +64,6 @@ def signup():
         return render_template("signup.html", error=error)
 
 
-@app.route('/welcome')
-def welcome():
-    return render_template("welcome.html")
-
-
 @app.route('/winelist')
 def winelist():
     return "Here is your wine. Isn't it nice?"
