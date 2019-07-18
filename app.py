@@ -19,16 +19,17 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        cur = con.cursor()
-        cur.execute(
-            'SELECT EXISTS ( SELECT * FROM users WHERE name = %s and password = %s )', (username, password))
+        with con:
+            cur = con.cursor()
+            cur.execute(
+                'SELECT EXISTS ( SELECT * FROM users WHERE name = %s and password = %s )', (username, password))
 
-        is_valid_user = cur.fetchone()[0]
+            is_valid_user = cur.fetchone()[0]
 
-        if is_valid_user:
-            return redirect(url_for('winelist'))
-        else:
-            error = "No way sucker"
+            if is_valid_user:
+                return redirect(url_for('winelist'))
+            else:
+                error = "No way sucker"
 
     return render_template('login.html', error=error)
 
@@ -36,7 +37,7 @@ def login():
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
     if request.method == "GET":
-        return render_template("signup.html")
+        return render_template("signup.html", error=None)
 
     if request.method == "POST":
         error = None
@@ -44,17 +45,23 @@ def signup():
         confirm_password = request.form['confirm_password_input']
 
         if password != confirm_password:
-            error = "Passwords don't match. Try again"
+            error = "Passwords don't match. Try again."
             return render_template("signup.html", error=error)
 
         username = request.form['username_input'].strip()
-        print(username)
-        # Check username not taken
-        cur = con.cursor()
-        cur.execute('SELECT * FROM users WHERE name = %s', (username,))
-        existing_users = cur.fetchone()
-        print(existing_users)
-        return "Hi signed up;"
+        with con:
+            cur = con.cursor()
+            cur.execute('SELECT * FROM users WHERE name = %s', (username,))
+            existing_users = cur.fetchone()
+            if existing_users == None:
+                cur.execute(
+                    'INSERT INTO users (name, password) VALUES (%s, %s)', (username, password))
+                return redirect(url_for('winelist'))
+
+            else:
+                error = "That user already exists. Pick a different username."
+
+        return render_template("signup.html", error=error)
 
 
 @app.route('/welcome')
