@@ -75,3 +75,5 @@ if __name__ == "__main__":
 
 # TODO
 # Use a layout.html to render header and footer everywhere
+# Salt and hash
+# Only let authenticated users get to winelist
